@@ -1,0 +1,35 @@
+{
+  "name": "administrator",
+  "version": "1.0.0",
+  "description": "A Discord bot for administration",
+  "main": "src/index.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "run": "tsc && node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flifloo/Administrator.git"
+  },
+  "keywords": [
+    "discord-bot"
+  ],
+  "author": "flifloo <flifloo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flifloo/Administrator/issues"
+  },
+  "homepage": "https://github.com/flifloo/Administrator#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  }
+}
