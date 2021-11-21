@@ -107,7 +107,7 @@ dist
 .idea
 
 # TypeScript compiled sources
-*.js
+build/
 
 # Configuration
 config.json

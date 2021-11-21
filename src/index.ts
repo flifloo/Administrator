@@ -1,14 +1,20 @@
 import "fs";
-import { Intents } from "discord.js";
+import {Intents, Message} from "discord.js";
 import "./lib/Modules";
 import {AdministratorClient} from "./lib/AdministratorClient";
 
 const config = require("../config.json");
-const client = new AdministratorClient({ intents: [Intents.FLAGS.GUILDS] });
+const client = new AdministratorClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 
 
 client.once("ready", async () => {
     client.application = await client.application?.fetch() ?? null;
+    if ("DEV" in process.env && process.env["DEV"] == "true") {
+        console.log("Dev mod enable");
+        await client.application?.commands.set([]);
+        for (const name in await client.guilds.fetch())
+            await (await client.guilds.fetch(name)).commands.set([]);
+    }
     await client.modules.loadAllModules();
     console.log("Started !");
 });
@@ -24,7 +30,20 @@ client.on("interactionCreate", async interaction => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        await interaction.reply({ content: "There was an error while executing this command !", ephemeral: true });
+        const msg = {content: "There was an error while executing this command !", ephemeral: true};
+        try {
+            await interaction.reply(msg);
+        } catch {
+            try {
+                await interaction.followUp(msg);
+            } catch {
+                try {
+                    await (await interaction.fetchReply() as Message).reply(msg);
+                } catch {
+                    console.warn("Cant send error message to the user :/");
+                }
+            }
+        }
     }
 });
 

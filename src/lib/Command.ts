@@ -20,7 +20,12 @@ export abstract class Command {
 
     async register() {
         try {
-            this.scope = await this.module.modules.client?.application?.commands.create(this.data);
+            if ("DEV" in process.env && process.env["DEV"] == "true") {
+                const devGuild = await this.module.modules.client?.guilds.fetch(process.env["DEVGUILD"] as any);
+                this.scope = await devGuild.commands.create(this.data); // ToDo: use only one call to avoid spamming the api
+            } else {
+                this.scope = await this.module.modules.client?.application?.commands.create(this.data);
+            }
 
             console.log("Successfully registered commands " + this.scope?.name);
         } catch (error) {
@@ -30,7 +35,7 @@ export abstract class Command {
 
     async isRegister(): Promise<boolean> {
         if (this.scope)
-            return !! await this.module.modules.client?.application?.commands.fetch(this.scope.id);
+            return !! await this.module.modules.client?.application?.commands.fetch(this.scope.id); // ToDo: use only one call to avoid spamming the api
 
         return false;
     }

@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "run": "tsc && node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "run": " node build/index.js",
+    "dev": "rm -fr build && tsc && node build/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,8 +27,12 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/voice": "^0.7.5",
     "discord-api-types": "^0.23.1",
-    "discord.js": "^13.1.0"
+    "discord.js": "^13.1.0",
+    "libsodium-wrappers": "^0.7.9",
+    "youtube-dl-exec": "^2.0.0",
+    "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
     "typescript": "^4.5.2"
