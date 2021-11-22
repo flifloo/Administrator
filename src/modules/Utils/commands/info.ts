@@ -1,27 +1,30 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {
     CategoryChannel,
-    ChatInputApplicationCommandData,
     CommandInteraction,
     GuildMember,
     MessageEmbed,
     TextChannel,
     VoiceChannel
 } from "discord.js";
+import {Module} from "../../../lib/Module";
 
 const {Constants: { ApplicationCommandOptionTypes }} = require("discord.js");
 
 
 export class InfoCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "info",
-        description: "Show information of the current guild or the specified user",
-        options: [{
-            type: ApplicationCommandOptionTypes.USER,
-            name: "target",
-            description: "The target user"
-        }]
-    };
+
+    constructor(module: Module) {
+        super(module, {
+            name: "info",
+            description: "Show information of the current guild or the specified user",
+            options: [{
+                type: ApplicationCommandOptionTypes.USER,
+                name: "target",
+                description: "The target user"
+            }]
+        });
+    }
 
     async execute(interaction: CommandInteraction) {
         let embed = new MessageEmbed();

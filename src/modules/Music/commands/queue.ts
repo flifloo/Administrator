@@ -1,5 +1,5 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
+import {CommandInteraction, GuildMember} from "discord.js";
 import {Music} from "../index";
 import {AudioPlayerStatus} from "@discordjs/voice";
 
@@ -12,14 +12,13 @@ function millisecondsToTime(milli: number): string {
 }
 
 export class QueueCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "queue",
-        description: "Display the current queue"
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "queue",
+            description: "Display the current queue"
+        });
         this.module = module;
     }
 

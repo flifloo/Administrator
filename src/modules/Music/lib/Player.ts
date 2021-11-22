@@ -62,12 +62,12 @@ export class Player {
                 }
             }
         });
-        this.audio.on('stateChange', (oldState: AudioPlayerState, newState: AudioPlayerState) => {
+        this.audio.on('stateChange', async (oldState: AudioPlayerState, newState: AudioPlayerState) => {
             if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
-                (oldState.resource as AudioResource<Track>).metadata.onFinish();
-                void this.processQueue();
+                await (oldState.resource as AudioResource<Track>).metadata.onFinish();
+                await this.processQueue();
             } else if (newState.status === AudioPlayerStatus.Playing) {
-                (newState.resource as AudioResource<Track>).metadata.onStart();
+                await (newState.resource as AudioResource<Track>).metadata.onStart();
             }
         });
 

@@ -1,5 +1,5 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember, VoiceChannel} from "discord.js";
+import {CommandInteraction, GuildMember, VoiceChannel} from "discord.js";
 import {Music} from "../index";
 import {Player} from "../lib/Player";
 import {Track} from "../lib/Track";
@@ -7,20 +7,19 @@ import {entersState, VoiceConnectionStatus} from "@discordjs/voice";
 const {Constants: { ApplicationCommandOptionTypes }} = require("discord.js");
 
 export class PlayCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "play",
-        description: "Play a music",
-        options: [{
-            type: ApplicationCommandOptionTypes.STRING,
-            name: "music",
-            description: "The music to play",
-            required: true
-        }]
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "play",
+            description: "Play a music",
+            options: [{
+                type: ApplicationCommandOptionTypes.STRING,
+                name: "music",
+                description: "The music to play",
+                required: true
+            }]
+        });
         this.module = module;
     }
 
@@ -53,7 +52,7 @@ export class PlayCommand extends Command {
         try {
             await entersState(player.connexion, VoiceConnectionStatus.Ready, 20e3);
         } catch (error) {
-            console.warn("Fail to enter state Ready !");
+            this.logger.warn("Fail to enter state Ready !");
             await interaction.followUp("Failed to join voice channel within 20 seconds, please try again later !");
             return;
         }
@@ -65,7 +64,7 @@ export class PlayCommand extends Command {
             player.enqueue(track);
             await interaction.followUp(`${track.info.videoDetails.title} added to queue`);
         } catch (error) {
-            console.error(error);
+            this.logger.err(error);
             await interaction.followUp("Fail to add to queue")
         }
     }

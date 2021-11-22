@@ -1,18 +1,17 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
+import {CommandInteraction, GuildMember} from "discord.js";
 import {Music} from "../index";
 import {AudioPlayerStatus} from "@discordjs/voice";
 
 
 export class PauseCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "pause",
-        description: "Pause the music"
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "pause",
+            description: "Pause the music"
+        });
         this.module = module;
     }
 

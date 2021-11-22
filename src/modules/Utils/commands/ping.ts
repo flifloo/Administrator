@@ -1,14 +1,15 @@
-import {Command} from "../../lib/Command";
-import {
-    ChatInputApplicationCommandData,
-    CommandInteraction,
-} from "discord.js";
+import {Command} from "../../../lib/Command";
+import {CommandInteraction} from "discord.js";
+import {Module} from "../../../lib/Module";
 
 export class PingCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "ping",
-        description: "Replies with Pong and the bot ping"
-    };
+
+    constructor(module: Module) {
+        super(module, {
+            name: "ping",
+            description: "Replies with Pong and the bot ping"
+        });
+    }
 
     async execute(interaction: CommandInteraction) {
         const msg = `Pong !\nReceive: ${new Date().getTime() - interaction.createdAt.getTime()}ms`;

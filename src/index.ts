@@ -8,9 +8,11 @@ const client = new AdministratorClient({ intents: [Intents.FLAGS.GUILDS, Intents
 
 
 client.once("ready", async () => {
-    client.application = await client.application?.fetch() ?? null;
+    await client.application?.fetch();
+    if (client.user?.username)
+        client.logger.name = client.user.username;
     await client.modules.loadAllModules();
-    console.log("Started !");
+    client.logger.info("Started !");
 });
 
 client.on("interactionCreate", async interaction => {
@@ -23,7 +25,7 @@ client.on("interactionCreate", async interaction => {
     try {
         await command.execute(interaction);
     } catch (error) {
-        console.error(error);
+        client.logger.err(error);
         const msg = {content: "There was an error while executing this command !", ephemeral: true};
         try {
             await interaction.reply(msg);
@@ -34,7 +36,7 @@ client.on("interactionCreate", async interaction => {
                 try {
                     await (await interaction.fetchReply() as Message).reply(msg);
                 } catch {
-                    console.warn("Cant send error message to the user :/");
+                    client.logger.warn("Cant send error message to the user :/");
                 }
             }
         }

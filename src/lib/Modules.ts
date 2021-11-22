@@ -19,12 +19,12 @@ export class Modules {
             this.modules.set(name, module);
 
             if (createCommand)
-                await this.registerCommand(module.commands.map(c => c.data));
+                await this.registerCommand(module.loadedCommands.map(c => c.data));
 
-            console.info(`Module ${name} loaded`)
+            module.logger.info(`loaded`)
         } catch (error) {
-            console.error(`Fail to load module ${name}`);
-            console.error(error);
+            this.client.logger.err(`Fail to load module ${name}`);
+            this.client.logger.err(error);
             return false
         }
         return true;
@@ -34,15 +34,15 @@ export class Modules {
         try {
             const module = this.modules.get(name);
             if (!module) {
-                console.error(`Module ${name} not found`);
+                this.client.logger.err(`Module ${name} not found`);
                 return false;
             }
             await module.unload();
             this.modules.delete(name);
-            console.info(`Module ${name} unloaded`)
+            this.client.logger.info(`Module ${name} unloaded`)
         } catch (error) {
-            console.error(`Fail to unload module ${name}`);
-            console.error(error);
+            this.client.logger.err(`Fail to unload module ${name}`);
+            this.client.logger.err(error);
             return false
         }
         return true;
@@ -103,7 +103,7 @@ export class Modules {
     }
 
     allCommands() : Command[] {
-        return Array.from(this.modules.values()).map(m => m.commands).reduce((l, m) => l.concat(m));
+        return Array.from(this.modules.values()).map(m => m.loadedCommands).reduce((l, m) => l.concat(m));
     }
 
     getCommand(name: string): Command | null {

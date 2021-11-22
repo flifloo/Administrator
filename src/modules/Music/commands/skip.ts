@@ -1,18 +1,17 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
+import {CommandInteraction, GuildMember} from "discord.js";
 import {Music} from "../index";
 import {AudioPlayerStatus} from "@discordjs/voice";
 
 
 export class SkipCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "skip",
-        description: "Skip the music"
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "skip",
+            description: "Skip the music"
+        });
         this.module = module;
     }
 

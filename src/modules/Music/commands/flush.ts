@@ -1,17 +1,16 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
+import {CommandInteraction, GuildMember} from "discord.js";
 import {Music} from "../index";
 
 
 export class FlushCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "flush",
-        description: "Flush the music queue"
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "flush",
+            description: "Flush the music queue"
+        });
         this.module = module;
     }
 

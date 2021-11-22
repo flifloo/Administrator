@@ -1,17 +1,16 @@
 import {Command} from "../../../lib/Command";
-import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
+import {CommandInteraction, GuildMember} from "discord.js";
 import {Music} from "../index";
 
 
 export class DisconnectCommand extends Command {
-    data: ChatInputApplicationCommandData = {
-        name: "disconnect",
-        description: "Stop the music"
-    };
     module: Music;
 
     constructor(module: Music) {
-        super(module);
+        super(module, {
+            name: "disconnect",
+            description: "Stop the music"
+        });
         this.module = module;
     }
 
