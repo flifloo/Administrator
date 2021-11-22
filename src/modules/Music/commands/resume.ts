@@ -1,13 +1,13 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
-import {Music} from "./index";
+import {Music} from "../index";
 import {AudioPlayerStatus} from "@discordjs/voice";
 
 
-export class DisconnectCommand extends Command {
+export class ResumeCommand extends Command {
     data: ChatInputApplicationCommandData = {
-        name: "disconnect",
-        description: "Stop the music"
+        name: "resume",
+        description: "Resume the music"
     };
     module: Music;
 
@@ -18,6 +18,7 @@ export class DisconnectCommand extends Command {
 
     async execute(interaction: CommandInteraction) {
         await interaction.deferReply();
+
         if (!interaction.guild || ! (interaction.member instanceof GuildMember)) {
             await interaction.editReply("This command is only usable in a guild :/");
             return;
@@ -31,9 +32,12 @@ export class DisconnectCommand extends Command {
         } else if (interaction.member.voice.channelId != player.connexion.joinConfig.channelId) {
             await interaction.editReply("You must be in the same voice channel !");
             return;
+        } else if ([AudioPlayerStatus.Paused, AudioPlayerStatus.AutoPaused].includes(player.audio.state.status)) {
+            await interaction.editReply(`Can't resume, the music is ${player.audio.state.status}`);
+            return;
         }
 
-        player.disconnect();
-        await interaction.followUp("Bot disconnected");
+        player.resume();
+        await interaction.followUp("Music resumed");
     }
 }

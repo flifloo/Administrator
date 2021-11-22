@@ -9,12 +9,6 @@ const client = new AdministratorClient({ intents: [Intents.FLAGS.GUILDS, Intents
 
 client.once("ready", async () => {
     client.application = await client.application?.fetch() ?? null;
-    if ("DEV" in process.env && process.env["DEV"] == "true") {
-        console.log("Dev mod enable");
-        await client.application?.commands.set([]);
-        for (const name in await client.guilds.fetch())
-            await (await client.guilds.fetch(name)).commands.set([]);
-    }
     await client.modules.loadAllModules();
     console.log("Started !");
 });

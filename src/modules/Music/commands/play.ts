@@ -1,8 +1,8 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember, VoiceChannel} from "discord.js";
-import {Music} from "./index";
-import {Player} from "./Player";
-import {Track} from "./Track";
+import {Music} from "../index";
+import {Player} from "../lib/Player";
+import {Track} from "../lib/Track";
 import {entersState, VoiceConnectionStatus} from "@discordjs/voice";
 const {Constants: { ApplicationCommandOptionTypes }} = require("discord.js");
 

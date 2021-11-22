@@ -1,13 +1,12 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
-import {Music} from "./index";
-import {AudioPlayerStatus} from "@discordjs/voice";
+import {Music} from "../index";
 
 
-export class SkipCommand extends Command {
+export class FlushCommand extends Command {
     data: ChatInputApplicationCommandData = {
-        name: "skip",
-        description: "Skip the music"
+        name: "flush",
+        description: "Flush the music queue"
     };
     module: Music;
 
@@ -32,12 +31,12 @@ export class SkipCommand extends Command {
         } else if (interaction.member.voice.channelId != player.connexion.joinConfig.channelId) {
             await interaction.editReply("You must be in the same voice channel !");
             return;
-        } else if (player.audio.state.status == AudioPlayerStatus.Idle) {
-            await interaction.editReply("Can't skip, there is no music");
+        } else if (!player.queue.length) {
+            await interaction.editReply("Can't flush queue, there is no music left");
             return;
         }
 
-        await player.skip();
-        await interaction.followUp("Music skipped");
+        player.flush();
+        await interaction.followUp("Queue flushed");
     }
 }

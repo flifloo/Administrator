@@ -1,12 +1,11 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
-import {Music} from "./index";
-import {AudioPlayerStatus} from "@discordjs/voice";
+import {Music} from "../index";
 
 
-export class StopCommand extends Command {
+export class DisconnectCommand extends Command {
     data: ChatInputApplicationCommandData = {
-        name: "stop",
+        name: "disconnect",
         description: "Stop the music"
     };
     module: Music;
@@ -31,12 +30,9 @@ export class StopCommand extends Command {
         } else if (interaction.member.voice.channelId != player.connexion.joinConfig.channelId) {
             await interaction.editReply("You must be in the same voice channel !");
             return;
-        } else if (player.audio.state.status == AudioPlayerStatus.Idle) {
-            await interaction.editReply("Can't stop, there is no music");
-            return;
         }
 
-        player.stop();
-        await interaction.followUp("Music stopped");
+        player.disconnect();
+        await interaction.followUp("Bot disconnected");
     }
 }

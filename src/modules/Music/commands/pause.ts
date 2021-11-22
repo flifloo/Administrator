@@ -1,13 +1,13 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
-import {Music} from "./index";
-import {AudioPlayerPausedState, AudioPlayerStatus} from "@discordjs/voice";
+import {Music} from "../index";
+import {AudioPlayerStatus} from "@discordjs/voice";
 
 
-export class FlushCommand extends Command {
+export class PauseCommand extends Command {
     data: ChatInputApplicationCommandData = {
-        name: "flush",
-        description: "Flush the music queue"
+        name: "pause",
+        description: "Pause the music"
     };
     module: Music;
 
@@ -32,12 +32,12 @@ export class FlushCommand extends Command {
         } else if (interaction.member.voice.channelId != player.connexion.joinConfig.channelId) {
             await interaction.editReply("You must be in the same voice channel !");
             return;
-        } else if (!player.queue.length) {
-            await interaction.editReply("Can't flush queue, there is no music left");
+        } else if ([AudioPlayerStatus.Playing, AudioPlayerStatus.Buffering].includes(player.audio.state.status)) {
+            await interaction.editReply(`Can't pause, the music is ${player.audio.state.status}`);
             return;
         }
 
-        player.flush();
-        await interaction.followUp("Queue flushed");
+        player.pause();
+        await interaction.followUp("Music paused");
     }
 }

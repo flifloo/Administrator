@@ -2,6 +2,7 @@ import { readdirSync } from "fs";
 import {Module} from "./Module";
 import {Command} from "./Command";
 import {AdministratorClient} from "./AdministratorClient";
+import {ApplicationCommandData, ApplicationCommandManager} from "discord.js";
 
 export class Modules {
     modules: Map<string, Module> = new Map<string, Module>();
@@ -11,11 +12,15 @@ export class Modules {
         this.client = client;
     }
     
-    async load(name: string) {
+    async load(name: string, createCommand: boolean = true) {
         try {
             const module: Module = new (require(__dirname+`/../modules/${name}`)[name])(this);
             await module.load();
             this.modules.set(name, module);
+
+            if (createCommand)
+                await this.registerCommand(module.commands.map(c => c.data));
+
             console.info(`Module ${name} loaded`)
         } catch (error) {
             console.error(`Fail to load module ${name}`);
@@ -56,7 +61,9 @@ export class Modules {
     
     async loadAllModules() {
         for (const module of await this.allModules())
-            await this.load(module.name);
+            await this.load(module.name, false);
+
+        await this.registerCommand(this.allCommands().map(c => c.data), true);
     }
     
     async unloadAllModules() {
@@ -69,12 +76,40 @@ export class Modules {
             await this.reload(module.name);
     }
 
-    getCommand(name: string): Command | null {
-        for (const module of Array.from(this.modules.values()))
-            for (const command of module.commands)
-                if (command.data.name == name)
-                    return command;
+    async registerCommand(data: ApplicationCommandData | ApplicationCommandData[], set: boolean = false) {
+        if (!this.client.application) {
+            this.client.logger.err("Fail to register command, client application is undefined !");
+            return;
+        }
 
+        let commands: ApplicationCommandManager = this.client.application.commands;
+
+        if ("DEV" in process.env && process.env["DEV"] == "true") {
+            await commands.set([]);
+            commands = (await this.client?.guilds.fetch(process.env["DEVGUILD"] as any)).commands as any;
+        }
+
+        if (Array.isArray(data))
+            if (set)
+                await commands.set(data);
+            else
+                for (const d of data)
+                    await commands.create(d);
+        else
+            if (set)
+                await commands.set([data]);
+            else
+                await commands.create(data);
+    }
+
+    allCommands() : Command[] {
+        return Array.from(this.modules.values()).map(m => m.commands).reduce((l, m) => l.concat(m));
+    }
+
+    getCommand(name: string): Command | null {
+        for (const command of this.allCommands())
+            if (command.data.name == name)
+                return command;
         return null;
     }
 }

@@ -1,6 +1,6 @@
-import {Command} from "../../lib/Command";
+import {Command} from "../../../lib/Command";
 import {ChatInputApplicationCommandData, CommandInteraction, GuildMember} from "discord.js";
-import {Music} from "./index";
+import {Music} from "../index";
 import {AudioPlayerStatus} from "@discordjs/voice";
 
 
