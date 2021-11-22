@@ -21,7 +21,7 @@ export class Modules {
             if (createCommand)
                 await this.registerCommand(module.loadedCommands.map(c => c.data));
 
-            module.logger.info(`loaded`)
+            module.logger.info("loaded");
         } catch (error) {
             this.client.logger.err(`Fail to load module ${name}`);
             this.client.logger.err(error);
