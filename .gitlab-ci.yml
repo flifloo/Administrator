@@ -1,0 +1,25 @@
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - apt-get update && apt-get install -y python
+    - npm install
+    - npm run build
+
+sast:
+  stage: test
+  artifacts:
+    name: sast
+    paths:
+      - gl-sast-report.json
+    reports:
+      sast: gl-sast-report.json
+    when: always
