@@ -1,2 +1,2 @@
 # Administrator
-A Discord bot for administration
+All purpose Discord bot
